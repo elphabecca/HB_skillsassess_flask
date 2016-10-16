@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_debugtoolbar import DebugToolbarExtension
 
 
@@ -19,6 +19,27 @@ def index_page():
     #
     # return render_template("index.html")
 
+@app.route("/application-form")
+def show_application():
+    """Shows the form submission for fname, lname, salary requirement, and position."""
+
+    return render_template("application-form.html")
+
+@app.route("/application", methods=["POST"])
+def show_app_submission():
+    """Gets the first name, last name, salary, and job title from the form submission then 
+    returns a response that acknowledges their application.
+    """
+
+    full_name = request.form.get("first-name") + " " + request.form.get("last-name")
+    position = request.form.get("job")
+    sal_req = request.form.get("sal-req")
+
+    return render_template("application-response.html",
+                            fullname=full_name,
+                            position=position,
+                            salreq=sal_req)
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
@@ -28,5 +49,7 @@ if __name__ == "__main__":
     # Use the DebugToolbar
     DebugToolbarExtension(app)
 
-    app.run(host="0.0.0.0")
+    app.run()
+
+    # put this inside app.run when turning in? host="0.0.0.0"
 
